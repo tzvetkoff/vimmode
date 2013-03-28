@@ -43,14 +43,10 @@
 	<dict>
 		<key>Website Access</key>
 		<dict>
-			<key>Allowed Domains</key>
-			<array>
-				<string>0.0.0.0</string>
-			</array>
 			<key>Include Secure Pages</key>
 			<true/>
 			<key>Level</key>
-			<string>Some</string>
+			<string>All</string>
 		</dict>
 	</dict>
 	<key>Update Manifest URL</key>
