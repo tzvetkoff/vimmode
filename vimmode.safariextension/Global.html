@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>VimMode</title>
+  <script type="text/javascript">
+//<![CDATA[
+
+function getCurrentTabIndex() {
+  for (var i = 0; i < safari.application.activeBrowserWindow.tabs.length; ++i) {
+    if (safari.application.activeBrowserWindow.tabs[i] == safari.application.activeBrowserWindow.activeTab) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+function sendSettings() {
+  var tabIndex = getCurrentTabIndex();
+  if (tabIndex > -1) {
+    var settings = {
+      hintsModeModifier   : safari.extension.settings.hintsModeModifier,
+      hintsModeKey        : safari.extension.settings.hintsModeKey,
+      hintsModeKeyCode    : safari.extension.settings.hintsModeKeyCode,
+
+      scrollDownModifier  : safari.extension.settings.scrollDownModifier,
+      scrollDownKey       : safari.extension.settings.scrollDownKey,
+      scrollDownKeyCode   : safari.extension.settings.scrollDownKeyCode,
+
+      scrollUpModifier    : safari.extension.settings.scrollUpModifier,
+      scrollUpKey         : safari.extension.settings.scrollUpKey,
+      scrollUpKeyCode     : safari.extension.settings.scrollUpKeyCode,
+
+      nextTabModifier     : safari.extension.settings.nextTabModifier,
+      nextTabKey          : safari.extension.settings.nextTabKey,
+      nextTabKeyCode      : safari.extension.settings.nextTabKeyCode,
+
+      prevTabModifier     : safari.extension.settings.prevTabModifier,
+      prevTabKey          : safari.extension.settings.prevTabKey,
+      prevTabKeyCode      : safari.extension.settings.prevTabKeyCode,
+
+      switchTabModifier   : safari.extension.settings.switchTabModifier,
+      consumeFocus        : safari.extension.settings.consumeFocus
+    };
+
+    safari.application.activeBrowserWindow.tabs[tabIndex].page.dispatchMessage('setSettings', settings);
+  }
+}
+
+function validateSettings() {
+  safari.extension.settings.removeEventListener('change', validateSettings);
+
+  var hintsModeKeyCode = safari.extension.settings.hintsModeKey.toUpperCase().slice(0, 1).charCodeAt(0);
+  var scrollDownKeyCode = safari.extension.settings.scrollDownKey.toUpperCase().slice(0, 1).charCodeAt(0);
+  var scrollUpKeyCode = safari.extension.settings.scrollUpKey.toUpperCase().slice(0, 1).charCodeAt(0);
+  var nextTabKeyCode = safari.extension.settings.nextTabKey.toUpperCase().slice(0, 1).charCodeAt(0);
+  var prevTabKeyCode = safari.extension.settings.prevTabKey.toUpperCase().slice(0, 1).charCodeAt(0);
+
+  if (!hintsModeKeyCode || hintsModeKeyCode < 65 || hintsModeKeyCode > 90) {
+    hintsModeKeyCode = 70; // F
+  }
+  if (!scrollDownKeyCode || scrollDownKeyCode < 65 || scrollDownKeyCode > 90) {
+    scrollDownKeyCode = 74; // J
+  }
+  if (!scrollUpKeyCode || scrollUpKeyCode < 65 || scrollUpKeyCode > 90) {
+    scrollUpKeyCode = 74; // J
+  }
+  if (!nextTabKeyCode || nextTabKeyCode < 65 || nextTabKeyCode > 90) {
+    nextTabKeyCode = 73; // I
+  }
+  if (!prevTabKeyCode || prevTabKeyCode < 65 || prevTabKeyCode > 90) {
+    prevTabKeyCode = 85; // U
+  }
+
+  safari.extension.settings.hintsModeKey = String.fromCharCode(hintsModeKeyCode);
+  safari.extension.settings.scrollDownKey = String.fromCharCode(scrollDownKeyCode);
+  safari.extension.settings.scrollUpKey = String.fromCharCode(scrollUpKeyCode);
+  safari.extension.settings.nextTabKey = String.fromCharCode(nextTabKeyCode);
+  safari.extension.settings.prevTabKey = String.fromCharCode(prevTabKeyCode);
+
+  safari.extension.settings.hintsModeKeyCode = hintsModeKeyCode;
+  safari.extension.settings.scrollDownKeyCode = scrollDownKeyCode;
+  safari.extension.settings.scrollUpKeyCode = scrollUpKeyCode;
+  safari.extension.settings.nextTabKeyCode = nextTabKeyCode;
+  safari.extension.settings.prevTabKeyCode = prevTabKeyCode;
+
+  sendSettings();
+  safari.extension.settings.addEventListener('change', validateSettings, false);
+}
+
+function handleMessage(event) {
+  switch (event.name) {
+    case 'getSettings':
+      sendSettings();
+      break;
+
+    case 'openTab':
+      safari.application.activeBrowserWindow.openTab().url = event.message;
+      break;
+
+    case 'nextTab':
+      var tabIndex = getCurrentTabIndex();
+      if (tabIndex > -1) {
+        if (tabIndex == safari.application.activeBrowserWindow.tabs.length - 1) {
+          safari.application.activeBrowserWindow.tabs[0].activate();
+        } else {
+          safari.application.activeBrowserWindow.tabs[tabIndex + 1].activate();
+        }
+      }
+      break;
+
+    case 'prevTab':
+      var tabIndex = getCurrentTabIndex();
+      if (tabIndex > -1) {
+        if (tabIndex == 0) {
+          safari.application.activeBrowserWindow.tabs[safari.application.activeBrowserWindow.tabs.length - 1].activate();
+        } else {
+          safari.application.activeBrowserWindow.tabs[tabIndex - 1].activate();
+        }
+      }
+      break;
+
+    case 'gotoTab':
+      if (safari.application.activeBrowserWindow.tabs[event.message]) {
+        safari.application.activeBrowserWindow.tabs[event.message].activate();
+      }
+      break;
+
+    case 'lastTab':
+      safari.application.activeBrowserWindow.tabs[safari.application.activeBrowserWindow.tabs.length - 1].activate();
+      break;
+
+  }
+}
+
+safari.application.addEventListener('message', handleMessage, false);
+safari.application.addEventListener('activate', sendSettings, false);
+safari.extension.settings.addEventListener('change', validateSettings, false);
+
+//]]>
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>

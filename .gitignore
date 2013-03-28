@@ -1,0 +1,5 @@
+# Finder
+.DS_Store
+
+# My stuff
+build/*

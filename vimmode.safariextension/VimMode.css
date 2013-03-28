@@ -1,0 +1,17 @@
+html body div.vimmode_internal_div {
+  display: none;
+}
+
+  html body div.vimmode_internal_div span.vimmode_internal_span {
+    position: absolute !important;
+    z-index: 999999;
+    padding: 1px 3px !important;
+    font-family: 'Helvetica Neue' !important;
+    font-size: 11px !important;
+    font-weight: bold !important;
+    text-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px !important;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255, 247, 133)), to(rgb(255, 197, 66))) !important;
+    border: 1px solid rgb(227, 190, 35) !important;
+    border-radius: 3px !important;
+    color: #333333 !important;
+  }
