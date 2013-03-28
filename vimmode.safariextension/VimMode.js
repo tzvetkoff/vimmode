@@ -118,33 +118,35 @@
 
     var clickableElements = Array.prototype.slice.call(document.querySelectorAll('a[href], textarea, input:not([type="hidden"]), button, select, [onclick]'));
     hintElementsCount = clickableElements.length;
-    if (hintElementsCount <= maxClickableElements) {
-      var index = 0;
-      clickableElements.forEach(function(element) {
-        if (!elementVisible(element)) {
-          return;
-        }
 
-        var combo = generateCombo(index, hintElementsCount);
-        var position = getElementPosition(element);
-        var hint = hintVerbatim.cloneNode(false);
-        hint.innerHTML = combo;
-        hint.style.left = position.left + 'px';
-        hint.style.top = position.top + 'px';
-        hintElements[combo] = element;
-        hintsContainer.appendChild(hint);
+    if (!hintElementsCount || hintElements > maxClickableElements) {
+      leaveHintsMode();
+      return;
+    }
 
-        ++index;
-      });
-
-      if (!hintsContainer.parentNode) {
-        document.body.appendChild(hintsContainer);
+    var index = 0;
+    clickableElements.forEach(function(element) {
+      if (!elementVisible(element)) {
+        return;
       }
 
-      hintsContainer.style.display = 'block';
-    } else {
-      alert('VimMode: Too many elements!');
+      var combo = generateCombo(index, hintElementsCount);
+      var position = getElementPosition(element);
+      var hint = hintVerbatim.cloneNode(false);
+      hint.innerHTML = combo;
+      hint.style.left = position.left + 'px';
+      hint.style.top = position.top + 'px';
+      hintElements[combo] = element;
+      hintsContainer.appendChild(hint);
+
+      ++index;
+    });
+
+    if (!hintsContainer.parentNode) {
+      document.body.appendChild(hintsContainer);
     }
+
+    hintsContainer.style.display = 'block';
   };
 
   // leaves hints mode
@@ -207,28 +209,36 @@
 
   // start with default settings
   var settings = {
-    hintsModeModifier   : 'ctrlKey',
-    hintsModeKey        : 'F',
-    hintsModeKeyCode    : 70,
+    hintsModeModifier       : 'ctrlKey',
+    hintsModeKey            : 'F',
+    hintsModeKeyCode        : 70,
 
-    scrollDownModifier  : 'ctrlKey',
-    scrollDownKey       : 'J',
-    scrollDownKeyCode   : 74,
+    scrollDownHalfModifier  : 'ctrlKey',
+    scrollDownHalfKey       : 'J',
+    scrollDownHalfKeyCode   : 74,
 
-    scrollUpModifier    : 'ctrlKey',
-    scrollUpKey         : 'K',
-    scrollUpKeyCode     : 75,
+    scrollUpHalfModifier    : 'ctrlKey',
+    scrollUpHalfKey         : 'K',
+    scrollUpHalfKeyCode     : 75,
 
-    nextTabModifier     : 'ctrlKey',
-    nextTabKey          : 'I',
-    nextTabKeyCode      : 73,
+    scrollDownFullModifier  : 'ctrlKey',
+    scrollDownFullKey       : 'N',
+    scrollDownFullKeyCode   : 78,
 
-    prevTabModifier     : 'ctrlKey',
-    prevTabKey          : 'U',
-    prevTabKeyCode      : 85,
+    scrollUpFullModifier    : 'ctrlKey',
+    scrollUpFullKey         : 'M',
+    scrollUpFullKeyCode     : 77,
 
-    switchTabModifier   : 'altKey',
-    consumeFocus        : false
+    nextTabModifier         : 'ctrlKey',
+    nextTabKey              : 'I',
+    nextTabKeyCode          : 73,
+
+    prevTabModifier         : 'ctrlKey',
+    prevTabKey              : 'U',
+    prevTabKeyCode          : 85,
+
+    switchTabModifier       : 'altKey',
+    consumeFocus            : false
   };
 
   // the message handler that recieves settings
@@ -293,16 +303,25 @@
         }
       }
 
-      // scroll down
-      if (checkModifier(event, settings.scrollDownModifier) && !event.metaKey && keyCode == settings.scrollDownKeyCode) {
-        //window.scrollBy(0, window.innerHeight / 2);
+      // scroll down half
+      if (checkModifier(event, settings.scrollDownHalfModifier) && !event.metaKey && keyCode == settings.scrollDownHalfKeyCode) {
         window.scrollBy(0, window.innerHeight / 2);
         return stopEvent(event);
       }
-
-      // scroll up
-      if (checkModifier(event, settings.scrollUpModifier) && !event.metaKey && keyCode == settings.scrollUpKeyCode) {
+      // scroll up half
+      if (checkModifier(event, settings.scrollUpHalfModifier) && !event.metaKey && keyCode == settings.scrollUpHalfKeyCode) {
         window.scrollBy(0, -window.innerHeight / 2);
+        return stopEvent(event);
+      }
+
+      // scroll down full
+      if (checkModifier(event, settings.scrollDownFullModifier) && !event.metaKey && keyCode == settings.scrollDownFullKeyCode) {
+        window.scrollBy(0, window.innerHeight);
+        return stopEvent(event);
+      }
+      // scroll up full
+      if (checkModifier(event, settings.scrollUpFullModifier) && !event.metaKey && keyCode == settings.scrollUpFullKeyCode) {
+        window.scrollBy(0, -window.innerHeight);
         return stopEvent(event);
       }
 
@@ -311,7 +330,6 @@
         safari.self.tab.dispatchMessage('nextTab');
         return stopEvent(event);
       }
-
       // prev tab
       if (checkModifier(event, settings.prevTabModifier) && !event.metaKey && keyCode == settings.prevTabKeyCode) {
         safari.self.tab.dispatchMessage('prevTab');

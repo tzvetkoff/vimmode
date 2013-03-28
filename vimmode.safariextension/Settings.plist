@@ -20,7 +20,7 @@
 			<string>Control</string>
 			<string>Alt</string>
 			<string>None</string>
-			<string>Disabled</string>
+			<string>Disable this action</string>
 		</array>
 		<key>Type</key>
 		<string>RadioButtons</string>
@@ -48,7 +48,7 @@
 	</dict>
 	<dict>
 		<key>Title</key>
-		<string>Scroll down</string>
+		<string>Scroll down half page</string>
 		<key>Type</key>
 		<string>Group</string>
 	</dict>
@@ -56,7 +56,7 @@
 		<key>DefaultValue</key>
 		<string>ctrlKey</string>
 		<key>Key</key>
-		<string>scrollDownModifier</string>
+		<string>scrollDownHalfModifier</string>
 		<key>Title</key>
 		<string>Modifier</string>
 		<key>Titles</key>
@@ -64,7 +64,7 @@
 			<string>Control</string>
 			<string>Alt</string>
 			<string>None</string>
-			<string>Disabled</string>
+			<string>Disable this action</string>
 		</array>
 		<key>Type</key>
 		<string>RadioButtons</string>
@@ -80,7 +80,7 @@
 		<key>DefaultValue</key>
 		<string>J</string>
 		<key>Key</key>
-		<string>scrollDownKey</string>
+		<string>scrollDownHalfKey</string>
 		<key>Title</key>
 		<string>Key</string>
 		<key>Type</key>
@@ -92,7 +92,7 @@
 	</dict>
 	<dict>
 		<key>Title</key>
-		<string>Scroll up</string>
+		<string>Scroll up half page</string>
 		<key>Type</key>
 		<string>Group</string>
 	</dict>
@@ -100,7 +100,7 @@
 		<key>DefaultValue</key>
 		<string>ctrlKey</string>
 		<key>Key</key>
-		<string>scrollUpModifier</string>
+		<string>scrollUpHalfModifier</string>
 		<key>Title</key>
 		<string>Modifier</string>
 		<key>Titles</key>
@@ -108,7 +108,7 @@
 			<string>Control</string>
 			<string>Alt</string>
 			<string>None</string>
-			<string>Disabled</string>
+			<string>Disable this action</string>
 		</array>
 		<key>Type</key>
 		<string>RadioButtons</string>
@@ -124,7 +124,95 @@
 		<key>DefaultValue</key>
 		<string>K</string>
 		<key>Key</key>
-		<string>scrollUpKey</string>
+		<string>scrollUpHalfKey</string>
+		<key>Title</key>
+		<string>Key</string>
+		<key>Type</key>
+		<string>TextField</string>
+	</dict>
+	<dict>
+		<key>Type</key>
+		<string>Separator</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Scroll down full page</string>
+		<key>Type</key>
+		<string>Group</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<string>ctrlKey</string>
+		<key>Key</key>
+		<string>scrollDownFullModifier</string>
+		<key>Title</key>
+		<string>Modifier</string>
+		<key>Titles</key>
+		<array>
+			<string>Control</string>
+			<string>Alt</string>
+			<string>None</string>
+			<string>Disable this action</string>
+		</array>
+		<key>Type</key>
+		<string>RadioButtons</string>
+		<key>Values</key>
+		<array>
+			<string>ctrlKey</string>
+			<string>altKey</string>
+			<string>returnValue</string>
+			<string>iAmDisabled</string>
+		</array>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<string>N</string>
+		<key>Key</key>
+		<string>scrollDownFullKey</string>
+		<key>Title</key>
+		<string>Key</string>
+		<key>Type</key>
+		<string>TextField</string>
+	</dict>
+	<dict>
+		<key>Type</key>
+		<string>Separator</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Scroll up full page</string>
+		<key>Type</key>
+		<string>Group</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<string>ctrlKey</string>
+		<key>Key</key>
+		<string>scrollUpFullModifier</string>
+		<key>Title</key>
+		<string>Modifier</string>
+		<key>Titles</key>
+		<array>
+			<string>Control</string>
+			<string>Alt</string>
+			<string>None</string>
+			<string>Disable this action</string>
+		</array>
+		<key>Type</key>
+		<string>RadioButtons</string>
+		<key>Values</key>
+		<array>
+			<string>ctrlKey</string>
+			<string>altKey</string>
+			<string>returnValue</string>
+			<string>iAmDisabled</string>
+		</array>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<string>M</string>
+		<key>Key</key>
+		<string>scrollUpFullKey</string>
 		<key>Title</key>
 		<string>Key</string>
 		<key>Type</key>
@@ -152,7 +240,7 @@
 			<string>Control</string>
 			<string>Alt</string>
 			<string>None</string>
-			<string>Disabled</string>
+			<string>Disable this action</string>
 		</array>
 		<key>Type</key>
 		<string>RadioButtons</string>
@@ -196,7 +284,7 @@
 			<string>Control</string>
 			<string>Alt</string>
 			<string>None</string>
-			<string>Disabled</string>
+			<string>Disable this action</string>
 		</array>
 		<key>Type</key>
 		<string>RadioButtons</string>
@@ -234,7 +322,7 @@
 			<string>Control</string>
 			<string>Alt</string>
 			<string>None</string>
-			<string>Disabled</string>
+			<string>Disable this action</string>
 		</array>
 		<key>Type</key>
 		<string>RadioButtons</string>
@@ -264,31 +352,45 @@
 		<key>DefaultValue</key>
 		<real>70</real>
 		<key>Key</key>
-		<string>hintsModeCharCode</string>
+		<string>hintsModeKeyCode</string>
 	</dict>
 	<dict>
 		<key>DefaultValue</key>
 		<real>73</real>
 		<key>Key</key>
-		<string>nextTabCharCode</string>
+		<string>nextTabKeyCode</string>
 	</dict>
 	<dict>
 		<key>DefaultValue</key>
 		<real>85</real>
 		<key>Key</key>
-		<string>prevTabCharCode</string>
+		<string>prevTabKeyCode</string>
 	</dict>
 	<dict>
 		<key>DefaultValue</key>
 		<real>74</real>
 		<key>Key</key>
-		<string>scrollDownCharCode</string>
+		<string>scrollDownHalfKeyCode</string>
 	</dict>
 	<dict>
 		<key>DefaultValue</key>
 		<real>75</real>
 		<key>Key</key>
-		<string>scrollUpCharCode</string>
+		<string>scrollUpHalfKeyCode</string>
+		<key>Secure</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<real>78</real>
+		<key>Key</key>
+		<string>scrollDownFullKeyCode</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<real>77</real>
+		<key>Key</key>
+		<string>scrollUpFullKeyCode</string>
 	</dict>
 </array>
 </plist>
