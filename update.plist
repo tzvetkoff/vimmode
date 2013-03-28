@@ -10,11 +10,11 @@
 			<key>Developer Identifier</key>
 			<string>45XZXMK598</string>
 			<key>CFBundleVersion</key>
-			<string>1</string>
+			<string>101</string>
 			<key>CFBundleShortVersionString</key>
-			<string>1.0</string>
+			<string>1.1</string>
 			<key>URL</key>
-			<string>http://tzvetkoff.net/vimmode/dl/1.0/vimmode.safariextz</string>
+			<string>http://tzvetkoff.net/vimmode/dl/1.1/vimmode.safariextz</string>
 		</dict>
 	</array>
 </dict>
