@@ -22,9 +22,9 @@ Unlike others, it has a clean codebase and is _fully_ configurable.
   __Yes__. Everything is configurable, even _disableable_.
 
 ## Installation
-1. [Download](http://tzvetkoff.net/vimmode/vimmode.safariextz).
+1. [Download](http://tzvetkoff.net/vimmode/dl/1.0/vimmode.safariextz).
 2. Open the file.
 3. There's no step 3! :-)
 
 ## Licence
-Copyright © 2013 Latchezar Tzvetkoff. See [LICENSE.md](blob/master/LICENSE.md) for details.
+Copyright © 2013 Latchezar Tzvetkoff. See [LICENSE.md](LICENSE.md) for details.
