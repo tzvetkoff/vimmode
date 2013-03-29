@@ -13,3 +13,8 @@ made setting labels more clear
 added full page scroll
 added some comments to source
 ```
+
+__1.2__
+```
+fixed a small bug in hints mode when no modifier is used
+```

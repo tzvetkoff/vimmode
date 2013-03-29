@@ -10,7 +10,7 @@ Unlike others, it has a clean codebase and is _fully_ configurable.
   __Tip__: Hold `⌘` (Command key) to hide hints when hints mode is active.
 
 * ### Scroll up/down
-  `Ctrl-J` and `Ctrl-K` are used be default, but you can easily configure them.
+  `Ctrl-J` and `Ctrl-K` for half-page, `Ctrl-N` and `Ctrl-M` for full page.
 
 * ### Next/previous tab
   `Ctrl-I` and `Ctrl-U`.
@@ -27,7 +27,7 @@ Unlike others, it has a clean codebase and is _fully_ configurable.
 3. There's no step 3! :-)
 
 ## Changes
-See [CHANGELOG.md](CHANGELOG.md)
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## Licence
 Copyright © 2013 Latchezar Tzvetkoff. See [LICENSE.md](LICENSE.md) for details.
