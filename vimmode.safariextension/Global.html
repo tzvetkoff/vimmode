@@ -24,6 +24,9 @@ function sendSettings() {
     hintsModeKey            : safari.extension.settings.hintsModeKey,
     hintsModeKeyCode        : safari.extension.settings.hintsModeKeyCode,
 
+    visibleElementsOnly     : safari.extension.settings.visibleElementsOnly,
+    comboCharset            : safari.extension.settings.comboCharset,
+
     scrollDownHalfModifier  : safari.extension.settings.scrollDownHalfModifier,
     scrollDownHalfKey       : safari.extension.settings.scrollDownHalfKey,
     scrollDownHalfKeyCode   : safari.extension.settings.scrollDownHalfKeyCode,
@@ -61,6 +64,7 @@ function sendSettings() {
 function validateSettings() {
   safari.extension.settings.removeEventListener('change', validateSettings);
 
+  var comboCharset = safari.extension.settings.comboCharset.toUpperCase().replace(/[^A-Z]+/ig, '');
   var hintsModeKeyCode = safari.extension.settings.hintsModeKey.toUpperCase().slice(0, 1).charCodeAt(0);
   var scrollDownHalfKeyCode = safari.extension.settings.scrollDownHalfKey.toUpperCase().slice(0, 1).charCodeAt(0);
   var scrollUpHalfKeyCode = safari.extension.settings.scrollUpHalfKey.toUpperCase().slice(0, 1).charCodeAt(0);
@@ -69,6 +73,9 @@ function validateSettings() {
   var nextTabKeyCode = safari.extension.settings.nextTabKey.toUpperCase().slice(0, 1).charCodeAt(0);
   var prevTabKeyCode = safari.extension.settings.prevTabKey.toUpperCase().slice(0, 1).charCodeAt(0);
 
+  if (comboCharset.length < 8) {
+    comboCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  }
   if (!hintsModeKeyCode || hintsModeKeyCode < 65 || hintsModeKeyCode > 90) {
     hintsModeKeyCode = 70; // F
   }
@@ -91,6 +98,7 @@ function validateSettings() {
     prevTabKeyCode = 85; // U
   }
 
+  safari.extension.settings.comboCharset = comboCharset;
   safari.extension.settings.hintsModeKey = String.fromCharCode(hintsModeKeyCode);
   safari.extension.settings.scrollDownHalfKey = String.fromCharCode(scrollDownHalfKeyCode);
   safari.extension.settings.scrollUpHalfKey = String.fromCharCode(scrollUpHalfKeyCode);

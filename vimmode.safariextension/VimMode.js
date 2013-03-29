@@ -19,22 +19,22 @@
   // navigatable elements count
   var hintElementsCount = 0;
 
-  // the absolute limit - no one should need a 4-letter combo
-  var maxClickableElements = 17576;
-
   // combo charset
   var comboCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+  // combo charset length
+  var comboCharsetLength = comboCharset.length;
+
   // the combo generator
   var generateCombo = function(index, length) {
-    if (length <= 26) {
+    if (length <= comboCharsetLength) {
       return comboCharset[index];
     }
-    if (length <= 676) {
-      return comboCharset[parseInt(index / 26)] + comboCharset[index % 26];
+    if (length <= comboCharsetLength * comboCharsetLength) {
+      return comboCharset[parseInt(index / comboCharsetLength)] + comboCharset[index % comboCharsetLength];
     }
-    if (length <= 17576) {
-      return comboCharset[parseInt(index / 676)] + comboCharset[parseInt(index / 26) % 26] + comboCharset[index % 26];
+    if (length <= comboCharset.length * comboCharset.length * comboCharset.length) {
+      return comboCharset[parseInt(index / (comboCharsetLength * comboCharsetLength))] + comboCharset[parseInt(index / comboCharsetLength) % comboCharsetLength] + comboCharset[index % comboCharsetLength];
     }
   };
 
@@ -47,7 +47,18 @@
       }
       element = element.parentNode;
     } while (element && element != docBody);
+
     return true;
+  };
+
+  // some fast caches
+  var bodyScrollLeft = 0, bodyScrollTop = 0, windowInnerWidth = 0, windowInnerHeight = 0;
+
+  // checks whether an position is inside the current visible area
+  var positionInsideVisibleArea = function(position) {
+    return !settings.visibleElementsOnly ||
+      (position.top  >= bodyScrollTop  && position.top  <= bodyScrollTop  + windowInnerHeight &&
+       position.left >= bodyScrollLeft && position.left <= bodyScrollLeft + windowInnerWidth);
   };
 
   // returns element absolute position in the document
@@ -93,14 +104,6 @@
     element.dispatchEvent(event);
   };
 
-  // the hints container
-  var hintsContainer = document.createElement('div');
-  hintsContainer.className = 'vimmode_internal_div';
-
-  // the hint element verbatim
-  var hintVerbatim = document.createElement('span');
-  hintVerbatim.className = 'vimmode_internal_span';
-
   // eats focused elements
   var consumeFocus = function() {
     if (document.activeElement && document.activeElement.blur) {
@@ -108,44 +111,114 @@
     }
   };
 
+  // the hints container
+  var hintsContainer = document.createElement('div');
+  hintsContainer.className = 'vimmode_internal_container';
+
+  // the hint element verbatim
+  var hintVerbatim = document.createElement('span');
+  hintVerbatim.className = 'vimmode_internal_hint';
+
+  // the warning container
+  var warningContainer = document.createElement('span');
+  warningContainer.className = 'vimmode_internal_warning';
+
+  // the warning container hide timeout
+  var warningTimeout = null;
+
+  // show a nice warning
+  var showWarning = function(message) {
+    warningContainer.innerHTML = message;
+
+    warningContainer.style.display = 'none';
+    warningContainer.style.opacity = 1.0;
+    warningContainer.style.display = 'inline';
+
+    if (!warningContainer.parentNode) {
+      document.body.appendChild(warningContainer);
+    }
+
+    if (warningTimeout) {
+      clearTimeout(warningTimeout);
+    }
+
+    warningTimeout = setTimeout(function() {
+      warningContainer.style.opacity = 0.0;
+      warningTimeout = null;
+    }, 2048);
+  };
+
   // enters hints mode
   var enterHintsMode = function() {
+    // eat it!
     consumeFocus();
 
+    // set mode and reset internal variables
     hintsModeActive = true;
     currentCombo = '';
     hintElements = {};
 
-    var clickableElements = Array.prototype.slice.call(document.querySelectorAll('a[href], textarea, input:not([type="hidden"]), button, select, [onclick]'));
-    hintElementsCount = clickableElements.length;
+    // get elements and quickly filter out hidden ones
+    var elements = Array.prototype.slice.call(document.querySelectorAll('a[href], textarea, input:not([type="hidden"]), button, select, [onclick]'));
+    elements = elements.filter(elementVisible);
 
-    if (!hintElementsCount || hintElements > maxClickableElements) {
+    // cache some variables
+    bodyScrollLeft = document.body.scrollLeft;
+    bodyScrollTop = document.body.scrollTop;
+    windowInnerWidth = window.innerWidth;
+    windowInnerHeight = window.innerHeight;
+
+    // leave only onscreen elements if configured
+    var elementPositions = [];
+    if (settings.visibleElementsOnly) {
+      elements = elements.filter(function(element) {
+        var position = getElementPosition(element);
+
+        if (positionInsideVisibleArea(position)) {
+          elementPositions.push(position);
+          return true;
+        }
+
+        return false;
+      })
+    } else {
+      elementPositions = elements.map(getElementPosition);
+    }
+
+    // store count
+    hintElementsCount = elements.length;
+
+    // if no elements found - show a nice warning and bail
+    if (!hintElementsCount) {
       leaveHintsMode();
+      showWarning('No hintable elements found');
       return;
     }
 
-    var index = 0;
-    clickableElements.forEach(function(element) {
-      if (!elementVisible(element)) {
-        return;
-      }
+    // if count exceeds limit - bail
+    if (hintElementsCount > comboCharsetLength * comboCharsetLength * comboCharsetLength) {
+      leaveHintsMode();
+      showWarning('Too many hintable elements');
+      return;
+    }
 
+    // cycle through elements and add hints
+    elements.forEach(function(element, index) {
       var combo = generateCombo(index, hintElementsCount);
-      var position = getElementPosition(element);
       var hint = hintVerbatim.cloneNode(false);
       hint.innerHTML = combo;
-      hint.style.left = position.left + 'px';
-      hint.style.top = position.top + 'px';
+      hint.style.left = elementPositions[index].left + 'px';
+      hint.style.top = elementPositions[index].top + 'px';
       hintElements[combo] = element;
       hintsContainer.appendChild(hint);
-
-      ++index;
     });
 
+    // add hints container to body if not already added
     if (!hintsContainer.parentNode) {
       document.body.appendChild(hintsContainer);
     }
 
+    // finally, show container
     hintsContainer.style.display = 'block';
   };
 
@@ -213,6 +286,9 @@
     hintsModeKey            : 'F',
     hintsModeKeyCode        : 70,
 
+    visibleElementsOnly     : true,
+    comboCharset            : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+
     scrollDownHalfModifier  : 'ctrlKey',
     scrollDownHalfKey       : 'J',
     scrollDownHalfKeyCode   : 74,
@@ -246,6 +322,8 @@
     switch (event.name) {
       case 'setSettings':
         settings = event.message;
+        comboCharset = settings.comboCharset;
+        comboCharsetLength = comboCharset.length;
         break;
     }
   }, false);
@@ -279,7 +357,7 @@
         if (!event.ctrlKey && !event.altKey && !event.metaKey && keyCode >= 65 && keyCode <= 90) {
           shiftKey = shiftKey || event.shiftKey;
           currentCombo += String.fromCharCode(keyCode);
-          currentCombo = currentCombo.slice(hintElementsCount <= 26 ? -1 : hintElementsCount <= 676 ? -2 : -3);
+          currentCombo = currentCombo.slice(hintElementsCount <= comboCharsetLength ? -1 : hintElementsCount <= comboCharsetLength * comboCharsetLength ? -2 : -3);
           var element = hintElements[currentCombo];
           if (element) {
             triggerElement(element);

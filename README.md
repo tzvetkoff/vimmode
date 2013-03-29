@@ -7,7 +7,12 @@ Unlike others, it has a clean codebase and is _fully_ configurable.
 
 * ### Hints mode
   Press `Ctrl-F` to enter hints mode, then type the tag for the link/control you'd like to trigger.
+
+  By default, only elements inside the visible area are hinted.
+
   __Tip__: Hold `⌘` (Command key) to hide hints when hints mode is active.
+
+  __Tip__: You can still scroll up/down, just use `Ctrl` as a modifier key (even if you've set it to `None`)
 
 * ### Scroll up/down
   `Ctrl-J` and `Ctrl-K` for half-page, `Ctrl-N` and `Ctrl-M` for full page.

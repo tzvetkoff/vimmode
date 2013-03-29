@@ -18,3 +18,10 @@ __1.2__
 ```
 fixed a small bug in hints mode when no modifier is used
 ```
+
+__1.3__
+```
+added option to hint only elements inside the visible area (made default)
+added option to configure hints charset (min-len = 8)
+added nice warning messages
+```

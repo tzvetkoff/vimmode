@@ -1,12 +1,12 @@
-html body div.vimmode_internal_div {
+html body div.vimmode_internal_container {
   display: none;
 }
 
-  html body div.vimmode_internal_div span.vimmode_internal_span {
+  html body div.vimmode_internal_container span.vimmode_internal_hint {
     position: absolute !important;
     z-index: 999999;
     padding: 1px 3px !important;
-    font-family: 'Helvetica Neue' !important;
+    font-family: 'Helvetica Neue', 'Helvetica' !important;
     font-size: 11px !important;
     font-weight: bold !important;
     text-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px !important;
@@ -15,3 +15,20 @@ html body div.vimmode_internal_div {
     border-radius: 3px !important;
     color: #333333 !important;
   }
+
+html body span.vimmode_internal_warning {
+  position: fixed !important;
+  left: 20px !important;
+  top: 20px !important;
+  padding: 5px 10px !important;
+  font-family: 'Helvetica Neue', 'Helvetica' !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  text-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px !important;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(185, 74, 72)), to(rgb(255, 0, 0))) !important;
+  border: 1px solid rgb(155, 55, 0) !important;
+  border-radius: 3px !important;
+  color: #ffffff !important;
+  -webkit-transition: 0.3s all;
+  transition: 0.3s all;
+}

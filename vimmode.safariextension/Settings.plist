@@ -43,6 +43,26 @@
 		<string>TextField</string>
 	</dict>
 	<dict>
+		<key>DefaultValue</key>
+		<true/>
+		<key>Key</key>
+		<string>visibleElementsOnly</string>
+		<key>Title</key>
+		<string>Highlight only elements inside the visible area</string>
+		<key>Type</key>
+		<string>CheckBox</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<string>ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+		<key>Key</key>
+		<string>comboCharset</string>
+		<key>Title</key>
+		<string>Hints charset</string>
+		<key>Type</key>
+		<string>TextField</string>
+	</dict>
+	<dict>
 		<key>Type</key>
 		<string>Separator</string>
 	</dict>
