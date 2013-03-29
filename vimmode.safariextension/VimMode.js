@@ -267,15 +267,6 @@
     document.body.addEventListener('keydown', function(event) {
       var keyCode = event.keyCode;
 
-      // we only want to handle mod-key & mod-shift-key
-      if (checkModifier(event, settings.hintsModeModifier) && !event.metaKey && keyCode == settings.hintsModeKeyCode) {
-        shiftKey = event.shiftKey;
-        if (!hintsModeActive) {
-          enterHintsMode();
-        }
-        return stopEvent(event);
-      }
-
       // if hints mode is active, we do more
       if (hintsModeActive) {
         // if esc is pressed we leave hints mode
@@ -301,6 +292,15 @@
           hintsContainer.style.display = 'none';
           return stopEvent(event);
         }
+      }
+
+      // we only want to handle mod-key & mod-shift-key
+      if (checkModifier(event, settings.hintsModeModifier) && !event.metaKey && keyCode == settings.hintsModeKeyCode) {
+        shiftKey = event.shiftKey;
+        if (!hintsModeActive) {
+          enterHintsMode();
+        }
+        return stopEvent(event);
       }
 
       // scroll down half
