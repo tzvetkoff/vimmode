@@ -339,105 +339,105 @@
     return event[modifier];
   };
 
-  // we can only hook keyboard events the document has finished loading
+  // we can blur focused elements only when document is fully loaded
   document.addEventListener('DOMContentLoaded', function() {
-    // the magic - hook key events
-    document.body.addEventListener('keydown', function(event) {
-      var keyCode = event.keyCode;
-
-      // if hints mode is active, we do more
-      if (hintsModeActive) {
-        // if esc is pressed we leave hints mode
-        if (keyCode == 27) {
-          leaveHintsMode();
-          return stopEvent(event);
-        }
-
-        // if no modifier keys are hold, go combo
-        if (!event.ctrlKey && !event.altKey && !event.metaKey && keyCode >= 65 && keyCode <= 90) {
-          shiftKey = shiftKey || event.shiftKey;
-          currentCombo += String.fromCharCode(keyCode);
-          currentCombo = currentCombo.slice(hintElementsCount <= comboCharsetLength ? -1 : hintElementsCount <= comboCharsetLength * comboCharsetLength ? -2 : -3);
-          var element = hintElements[currentCombo];
-          if (element) {
-            triggerElement(element);
-          }
-          return stopEvent(event);
-        }
-
-        // hide hints when meta key is hold
-        if (event.metaKey && !event.ctrlKey && !event.altKey && keyCode == 91) {
-          hintsContainer.style.display = 'none';
-          return stopEvent(event);
-        }
-      }
-
-      // we only want to handle mod-key & mod-shift-key
-      if (checkModifier(event, settings.hintsModeModifier) && !event.metaKey && keyCode == settings.hintsModeKeyCode) {
-        shiftKey = event.shiftKey;
-        if (!hintsModeActive) {
-          enterHintsMode();
-        }
-        return stopEvent(event);
-      }
-
-      // scroll down half
-      if (checkModifier(event, settings.scrollDownHalfModifier) && !event.metaKey && keyCode == settings.scrollDownHalfKeyCode) {
-        window.scrollBy(0, window.innerHeight / 2);
-        return stopEvent(event);
-      }
-      // scroll up half
-      if (checkModifier(event, settings.scrollUpHalfModifier) && !event.metaKey && keyCode == settings.scrollUpHalfKeyCode) {
-        window.scrollBy(0, -window.innerHeight / 2);
-        return stopEvent(event);
-      }
-
-      // scroll down full
-      if (checkModifier(event, settings.scrollDownFullModifier) && !event.metaKey && keyCode == settings.scrollDownFullKeyCode) {
-        window.scrollBy(0, window.innerHeight);
-        return stopEvent(event);
-      }
-      // scroll up full
-      if (checkModifier(event, settings.scrollUpFullModifier) && !event.metaKey && keyCode == settings.scrollUpFullKeyCode) {
-        window.scrollBy(0, -window.innerHeight);
-        return stopEvent(event);
-      }
-
-      // next tab
-      if (checkModifier(event, settings.nextTabModifier) && !event.metaKey && keyCode == settings.nextTabKeyCode) {
-        safari.self.tab.dispatchMessage('nextTab');
-        return stopEvent(event);
-      }
-      // prev tab
-      if (checkModifier(event, settings.prevTabModifier) && !event.metaKey && keyCode == settings.prevTabKeyCode) {
-        safari.self.tab.dispatchMessage('prevTab');
-        return stopEvent(event);
-      }
-
-      // alt+number tab switching
-      if (checkModifier(event, settings.switchTabModifier) && !event.metaKey && keyCode >= 48 && keyCode <= 57) {
-        if (keyCode == 48) {
-          safari.self.tab.dispatchMessage('lastTab');
-        } else {
-          safari.self.tab.dispatchMessage('gotoTab', keyCode - 49);
-        }
-        return stopEvent(event);
-      }
-    }, false);
-
-    // remove hidden class from container when meta key is released
-    document.body.addEventListener('keyup', function() {
-      if (hintsModeActive) {
-        if (event.keyIdentifier == 'Meta') {
-          hintsContainer.style.display = 'block';
-        }
-      }
-    }, false);
-
     // consume focus if needed
     if (settings.consumeFocus) {
       if (!/www\.google\.[a-z]{2,}/.test(location.href)) {
-        setTimeout(consumeFocus, 0);
+        setTimeout(consumeFocus, 128);  // 0 timeout is sometimes just not enough
+      }
+    }
+  }, false);
+
+  // the magic - hook key events
+  document.addEventListener('keydown', function(event) {
+    var keyCode = event.keyCode;
+
+    // if hints mode is active, we do more
+    if (hintsModeActive) {
+      // if esc is pressed we leave hints mode
+      if (keyCode == 27) {
+        leaveHintsMode();
+        return stopEvent(event);
+      }
+
+      // if no modifier keys are hold, go combo
+      if (!event.ctrlKey && !event.altKey && !event.metaKey && keyCode >= 65 && keyCode <= 90) {
+        shiftKey = shiftKey || event.shiftKey;
+        currentCombo += String.fromCharCode(keyCode);
+        currentCombo = currentCombo.slice(hintElementsCount <= comboCharsetLength ? -1 : hintElementsCount <= comboCharsetLength * comboCharsetLength ? -2 : -3);
+        var element = hintElements[currentCombo];
+        if (element) {
+          triggerElement(element);
+        }
+        return stopEvent(event);
+      }
+
+      // hide hints when meta key is hold
+      if (event.metaKey && !event.ctrlKey && !event.altKey && keyCode == 91) {
+        hintsContainer.style.display = 'none';
+        return stopEvent(event);
+      }
+    }
+
+    // we only want to handle mod-key & mod-shift-key
+    if (checkModifier(event, settings.hintsModeModifier) && !event.metaKey && keyCode == settings.hintsModeKeyCode) {
+      shiftKey = event.shiftKey;
+      if (!hintsModeActive) {
+        enterHintsMode();
+      }
+      return stopEvent(event);
+    }
+
+    // scroll down half
+    if (checkModifier(event, settings.scrollDownHalfModifier) && !event.metaKey && keyCode == settings.scrollDownHalfKeyCode) {
+      window.scrollBy(0, window.innerHeight / 2);
+      return stopEvent(event);
+    }
+    // scroll up half
+    if (checkModifier(event, settings.scrollUpHalfModifier) && !event.metaKey && keyCode == settings.scrollUpHalfKeyCode) {
+      window.scrollBy(0, -window.innerHeight / 2);
+      return stopEvent(event);
+    }
+
+    // scroll down full
+    if (checkModifier(event, settings.scrollDownFullModifier) && !event.metaKey && keyCode == settings.scrollDownFullKeyCode) {
+      window.scrollBy(0, window.innerHeight);
+      return stopEvent(event);
+    }
+    // scroll up full
+    if (checkModifier(event, settings.scrollUpFullModifier) && !event.metaKey && keyCode == settings.scrollUpFullKeyCode) {
+      window.scrollBy(0, -window.innerHeight);
+      return stopEvent(event);
+    }
+
+    // next tab
+    if (checkModifier(event, settings.nextTabModifier) && !event.metaKey && keyCode == settings.nextTabKeyCode) {
+      safari.self.tab.dispatchMessage('nextTab');
+      return stopEvent(event);
+    }
+    // prev tab
+    if (checkModifier(event, settings.prevTabModifier) && !event.metaKey && keyCode == settings.prevTabKeyCode) {
+      safari.self.tab.dispatchMessage('prevTab');
+      return stopEvent(event);
+    }
+
+    // alt+number tab switching
+    if (checkModifier(event, settings.switchTabModifier) && !event.metaKey && keyCode >= 48 && keyCode <= 57) {
+      if (keyCode == 48) {
+        safari.self.tab.dispatchMessage('lastTab');
+      } else {
+        safari.self.tab.dispatchMessage('gotoTab', keyCode - 49);
+      }
+      return stopEvent(event);
+    }
+  }, false);
+
+  // show hints again when meta key is released
+  document.addEventListener('keyup', function() {
+    if (hintsModeActive) {
+      if (event.keyIdentifier == 'Meta') {
+        hintsContainer.style.display = 'block';
       }
     }
   }, false);

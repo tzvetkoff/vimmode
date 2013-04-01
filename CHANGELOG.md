@@ -25,3 +25,8 @@ added option to hint only elements inside the visible area (made default)
 added option to configure hints charset (min-len = 8)
 added nice warning messages
 ```
+
+__1.4__
+```
+moved key event handlers outside of doc load
+```
