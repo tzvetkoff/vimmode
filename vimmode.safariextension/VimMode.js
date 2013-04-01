@@ -287,6 +287,7 @@
     hintsModeKeyCode        : 70,
 
     visibleElementsOnly     : true,
+    openTabsInBackground    : true,
     comboCharset            : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
 
     scrollDownHalfModifier  : 'ctrlKey',
@@ -331,12 +332,15 @@
   // get settings
   safari.self.tab.dispatchMessage('getSettings');
 
-  // modifier check shorty
-  var checkModifier = function(event, modifier) {
-    if (modifier == 'returnValue' && document.activeElement && (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA' || document.activeElement.tagName == 'SELECT')) {
-      return false;
-    }
-    return event[modifier];
+  // check if element or some of its parents has contenteditable="true"
+  var elementEditable = function(element) {
+    do {
+      if (element.contentEditable == 'true' || element.tagName == 'INPUT' || element.tagName == 'TEXTAREA') {
+        return true;
+      }
+    } while (element = element.parentNode);
+
+    return false;
   };
 
   // we can blur focused elements only when document is fully loaded
@@ -351,6 +355,11 @@
 
   // the magic - hook key events
   document.addEventListener('keydown', function(event) {
+    // do nothing if we're inside an editable element
+    if (document.activeElement && elementEditable(document.activeElement)) {
+      return;
+    }
+
     var keyCode = event.keyCode;
 
     // if hints mode is active, we do more
@@ -381,7 +390,7 @@
     }
 
     // we only want to handle mod-key & mod-shift-key
-    if (checkModifier(event, settings.hintsModeModifier) && !event.metaKey && keyCode == settings.hintsModeKeyCode) {
+    if (event[settings.hintsModeModifier] && !event.metaKey && keyCode == settings.hintsModeKeyCode) {
       shiftKey = event.shiftKey;
       if (!hintsModeActive) {
         enterHintsMode();
@@ -390,40 +399,40 @@
     }
 
     // scroll down half
-    if (checkModifier(event, settings.scrollDownHalfModifier) && !event.metaKey && keyCode == settings.scrollDownHalfKeyCode) {
+    if (event[settings.scrollDownHalfModifier] && !event.metaKey && keyCode == settings.scrollDownHalfKeyCode) {
       window.scrollBy(0, window.innerHeight / 2);
       return stopEvent(event);
     }
     // scroll up half
-    if (checkModifier(event, settings.scrollUpHalfModifier) && !event.metaKey && keyCode == settings.scrollUpHalfKeyCode) {
+    if (event[settings.scrollUpHalfModifier] && !event.metaKey && keyCode == settings.scrollUpHalfKeyCode) {
       window.scrollBy(0, -window.innerHeight / 2);
       return stopEvent(event);
     }
 
     // scroll down full
-    if (checkModifier(event, settings.scrollDownFullModifier) && !event.metaKey && keyCode == settings.scrollDownFullKeyCode) {
+    if (event[settings.scrollDownFullModifier] && !event.metaKey && keyCode == settings.scrollDownFullKeyCode) {
       window.scrollBy(0, window.innerHeight);
       return stopEvent(event);
     }
     // scroll up full
-    if (checkModifier(event, settings.scrollUpFullModifier) && !event.metaKey && keyCode == settings.scrollUpFullKeyCode) {
+    if (event[settings.scrollUpFullModifier] && !event.metaKey && keyCode == settings.scrollUpFullKeyCode) {
       window.scrollBy(0, -window.innerHeight);
       return stopEvent(event);
     }
 
     // next tab
-    if (checkModifier(event, settings.nextTabModifier) && !event.metaKey && keyCode == settings.nextTabKeyCode) {
+    if (event[settings.nextTabModifier] && !event.metaKey && keyCode == settings.nextTabKeyCode) {
       safari.self.tab.dispatchMessage('nextTab');
       return stopEvent(event);
     }
     // prev tab
-    if (checkModifier(event, settings.prevTabModifier) && !event.metaKey && keyCode == settings.prevTabKeyCode) {
+    if (event[settings.prevTabModifier] && !event.metaKey && keyCode == settings.prevTabKeyCode) {
       safari.self.tab.dispatchMessage('prevTab');
       return stopEvent(event);
     }
 
     // alt+number tab switching
-    if (checkModifier(event, settings.switchTabModifier) && !event.metaKey && keyCode >= 48 && keyCode <= 57) {
+    if (event[settings.switchTabModifier] && !event.metaKey && keyCode >= 48 && keyCode <= 57) {
       if (keyCode == 48) {
         safari.self.tab.dispatchMessage('lastTab');
       } else {

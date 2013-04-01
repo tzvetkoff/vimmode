@@ -54,6 +54,16 @@
 	</dict>
 	<dict>
 		<key>DefaultValue</key>
+		<true/>
+		<key>Key</key>
+		<string>openTabsInBackground</string>
+		<key>Title</key>
+		<string>Open new tabs in background</string>
+		<key>Type</key>
+		<string>CheckBox</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
 		<string>ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 		<key>Key</key>
 		<string>comboCharset</string>

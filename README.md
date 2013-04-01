@@ -10,6 +10,8 @@ Unlike others, it has a clean codebase and is _fully_ configurable.
 
   By default, only elements inside the visible area are hinted.
 
+  __Tip__: You can open links in new tabs by using the `Shift` key, e.g. `Ctrl-Shift-F` or a `Shift-A` inside the combo.
+
   __Tip__: Hold `⌘` (Command key) to hide hints when hints mode is active.
 
   __Tip__: You can still scroll up/down, just use `Ctrl` as a modifier key (even if you've set it to `None`)
@@ -27,7 +29,7 @@ Unlike others, it has a clean codebase and is _fully_ configurable.
   __Yes__. Everything is configurable, even _disableable_.
 
 ## Installation
-1. [Download](http://tzvetkoff.net/vimmode/dl/1.3/vimmode.safariextz).
+1. [Download](http://tzvetkoff.net/vimmode/dl/1.4/vimmode.safariextz).
 2. Open the file.
 3. There's no step 3! :-)
 

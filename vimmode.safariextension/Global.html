@@ -25,6 +25,7 @@ function sendSettings() {
     hintsModeKeyCode        : safari.extension.settings.hintsModeKeyCode,
 
     visibleElementsOnly     : safari.extension.settings.visibleElementsOnly,
+    openTabsInBackground    : safari.extension.settings.openTabsInBackground,
     comboCharset            : safari.extension.settings.comboCharset,
 
     scrollDownHalfModifier  : safari.extension.settings.scrollDownHalfModifier,
@@ -123,7 +124,7 @@ function handleMessage(event) {
       break;
 
     case 'openTab':
-      safari.application.activeBrowserWindow.openTab().url = event.message;
+      safari.application.activeBrowserWindow.openTab(safari.extension.settings.openTabsInBackground ? 'background' : 'foreground').url = event.message;
       break;
 
     case 'nextTab':

@@ -29,4 +29,6 @@ added nice warning messages
 __1.4__
 ```
 moved key event handlers outside of doc load
+added option to open new tabs in background
+fixed an issue with elements having contenteditable="true" set
 ```
