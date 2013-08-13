@@ -32,3 +32,8 @@ moved key event handlers outside of doc load
 added option to open new tabs in background
 fixed an issue with elements having contenteditable="true" set
 ```
+
+__1.5__
+```
+added option to override site-specific keyboard shortcuts (bubble)
+```

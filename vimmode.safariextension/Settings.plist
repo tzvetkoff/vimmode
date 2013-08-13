@@ -64,6 +64,16 @@
 	</dict>
 	<dict>
 		<key>DefaultValue</key>
+		<false/>
+		<key>Key</key>
+		<string>bubbleBobble</string>
+		<key>Title</key>
+		<string>Override website-specific keyboard actions</string>
+		<key>Type</key>
+		<string>CheckBox</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
 		<string>ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 		<key>Key</key>
 		<string>comboCharset</string>
