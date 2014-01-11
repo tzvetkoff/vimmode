@@ -37,3 +37,8 @@ __1.5__
 ```
 added option to override site-specific keyboard shortcuts (bubble)
 ```
+
+__1.6__
+```
+fixed a minor with submit/reset inputs
+```

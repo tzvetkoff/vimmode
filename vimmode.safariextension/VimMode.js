@@ -244,7 +244,7 @@
       case 'INPUT':
         if (element.type == 'checkbox' || element.type == 'radio') {
           element.checked = !element.checked;
-        } else if (element.type == 'button') {
+        } else if (element.type == 'button' || element.type == 'submit' || element.type == 'reset') {
           element.click();
         } else {
           element.focus();
