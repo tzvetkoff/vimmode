@@ -16,6 +16,10 @@ html body div.vimmode_internal_container {
     color: #333333 !important;
   }
 
+    html body div.vimmode_internal_container span.vimmode_internal_hint span.vimmode_internal_hint_hi {
+      color: #df0000;
+    }
+
 html body span.vimmode_internal_warning {
   position: fixed !important;
   left: 20px !important;

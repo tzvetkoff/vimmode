@@ -29,7 +29,7 @@ Unlike others, it has a clean codebase and is _fully_ configurable.
   __Yes__. Everything is configurable, even _disableable_.
 
 ## Installation
-1. [Download](http://tzvetkoff.net/vimmode/dl/1.6/vimmode.safariextz).
+1. [Download](http://tzvetkoff.net/vimmode/dl/1.7/vimmode.safariextz).
 2. Open the file.
 3. There's no step 3! :-)
 

@@ -74,6 +74,16 @@
 	</dict>
 	<dict>
 		<key>DefaultValue</key>
+		<true/>
+		<key>Key</key>
+		<string>hideNonMatchingHints</string>
+		<key>Title</key>
+		<string>Hide non-matching hints when typing</string>
+		<key>Type</key>
+		<string>CheckBox</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
 		<string>ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 		<key>Key</key>
 		<string>comboCharset</string>

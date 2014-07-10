@@ -10,20 +10,28 @@
   // whether we need to open the link in a new tab
   var shiftKey = false;
 
-  // current combination as string
+  // current combo as string
   var currentCombo = '';
 
-  // key-value of navigatable elements (combination => element)
-  var hintElements = {};
+  // key-value of navigatable elements (combo => element)
+  var hintedElements = {};
 
   // navigatable elements count
-  var hintElementsCount = 0;
+  var hintedElementsCount = 0;
+
+  // key-value of hints (combo => element)
+  var hints = {};
 
   // combo charset
   var comboCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   // combo charset length
   var comboCharsetLength = comboCharset.length;
+
+  // nice string util
+  var strStartsWith = function(str, what) {
+    return str.slice(0, what.length) === what;
+  };
 
   // the combo generator
   var generateCombo = function(index, length) {
@@ -35,6 +43,50 @@
     }
     if (length <= comboCharset.length * comboCharset.length * comboCharset.length) {
       return comboCharset[parseInt(index / (comboCharsetLength * comboCharsetLength))] + comboCharset[parseInt(index / comboCharsetLength) % comboCharsetLength] + comboCharset[index % comboCharsetLength];
+    }
+  };
+
+  var comboHtml = function(combo) {
+    if (currentCombo.length && strStartsWith(combo, currentCombo)) {
+      return '<span class="vimmode_internal_hint_hi">' + currentCombo + '</span>' + combo.slice(currentCombo.length);
+    }
+
+    return combo;
+  };
+
+  var buildHints = function(hintableElements, elementPositions) {
+    hintableElements.forEach(function(element, index) {
+      var combo = generateCombo(index, hintedElementsCount);
+      var hint = hintVerbatim.cloneNode(false);
+      hint.innerHTML = comboHtml(combo);
+      hint.style.left = elementPositions[index].left + 'px';
+      hint.style.top = elementPositions[index].top + 'px';
+      hintsContainer.appendChild(hint);
+
+      hintedElements[combo] = element;
+      hints[combo] = hint;
+    });
+  };
+
+  var updateHints = function() {
+    var found = false;
+
+    for (var key in hints) {
+      if (hints.hasOwnProperty(key)) {
+        var hint = hints[key];
+        hint.style.display = 'inline';
+        hint.innerHTML = comboHtml(key);
+
+        if (strStartsWith(key, currentCombo)) {
+          found = true;
+        } else if (settings.hideNonMatchingHints) {
+          hint.style.display = 'none';
+        }
+      }
+    }
+
+    if (!found) {
+      leaveHintsMode();
     }
   };
 
@@ -156,11 +208,12 @@
     // set mode and reset internal variables
     hintsModeActive = true;
     currentCombo = '';
-    hintElements = {};
+    hintedElements = {};
+    hints = {};
 
     // get elements and quickly filter out hidden ones
-    var elements = Array.prototype.slice.call(document.querySelectorAll('a[href], textarea, input:not([type="hidden"]), button, select, [onclick]'));
-    elements = elements.filter(elementVisible);
+    var hintableElements = Array.prototype.slice.call(document.querySelectorAll('a[href], textarea, input:not([type="hidden"]), button, select, [onclick]'));
+    hintableElements = hintableElements.filter(elementVisible);
 
     // cache some variables
     bodyScrollLeft = document.body.scrollLeft;
@@ -171,7 +224,7 @@
     // leave only onscreen elements if configured
     var elementPositions = [];
     if (settings.visibleElementsOnly) {
-      elements = elements.filter(function(element) {
+      hintableElements = hintableElements.filter(function(element) {
         var position = getElementPosition(element);
 
         if (positionInsideVisibleArea(position)) {
@@ -182,36 +235,30 @@
         return false;
       })
     } else {
-      elementPositions = elements.map(getElementPosition);
+      elementPositions = hintableElements.map(getElementPosition);
     }
 
     // store count
-    hintElementsCount = elements.length;
+    hintedElementsCount = hintableElements.length;
 
     // if no elements found - show a nice warning and bail
-    if (!hintElementsCount) {
+    if (!hintedElementsCount) {
       leaveHintsMode();
       showWarning('No hintable elements found');
       return;
     }
 
     // if count exceeds limit - bail
-    if (hintElementsCount > comboCharsetLength * comboCharsetLength * comboCharsetLength) {
+    if (hintedElementsCount > comboCharsetLength * comboCharsetLength * comboCharsetLength) {
       leaveHintsMode();
       showWarning('Too many hintable elements');
       return;
     }
 
+    // build hints
+    buildHints(hintableElements, elementPositions);
+
     // cycle through elements and add hints
-    elements.forEach(function(element, index) {
-      var combo = generateCombo(index, hintElementsCount);
-      var hint = hintVerbatim.cloneNode(false);
-      hint.innerHTML = combo;
-      hint.style.left = elementPositions[index].left + 'px';
-      hint.style.top = elementPositions[index].top + 'px';
-      hintElements[combo] = element;
-      hintsContainer.appendChild(hint);
-    });
 
     // add hints container to body if not already added
     if (!hintsContainer.parentNode) {
@@ -225,7 +272,7 @@
   // leaves hints mode
   var leaveHintsMode = function() {
     hintsModeActive = false;
-    hintElements = {};
+    hints = {};
     hintsContainer.style.display = 'none';
     hintsContainer.innerHTML = '';
   };
@@ -285,6 +332,7 @@
     hintsModeModifier       : 'ctrlKey',
     hintsModeKey            : 'F',
     hintsModeKeyCode        : 70,
+    hideNonMatchingHints    : true,
 
     visibleElementsOnly     : true,
     openTabsInBackground    : true,
@@ -354,7 +402,7 @@
   };
 
   // hook keyboard once we receive settings
-  var hookKeyDown = function () {
+  var hookKeyDown = function() {
     // the magic - hook key events
     document.addEventListener('keydown', function(event) {
       // do nothing if we're inside an editable element
@@ -376,17 +424,28 @@
         if (!event.ctrlKey && !event.altKey && !event.metaKey && keyCode >= 65 && keyCode <= 90) {
           shiftKey = shiftKey || event.shiftKey;
           currentCombo += String.fromCharCode(keyCode);
-          currentCombo = currentCombo.slice(hintElementsCount <= comboCharsetLength ? -1 : hintElementsCount <= comboCharsetLength * comboCharsetLength ? -2 : -3);
-          var element = hintElements[currentCombo];
+          currentCombo = currentCombo.slice(hintedElementsCount <= comboCharsetLength ? -1 : hintedElementsCount <= comboCharsetLength * comboCharsetLength ? -2 : -3);
+          updateHints();
+
+          var element = hintedElements[currentCombo];
           if (element) {
             triggerElement(element);
           }
           return stopEvent(event);
         }
 
+        // handle backspace
+        if (!event.ctrlKey && !event.altKey && !event.metaKey && keyCode == 8) {
+          currentCombo = currentCombo.slice(0, currentCombo.length - 1);
+          updateHints();
+
+          return stopEvent(event);
+        }
+
         // hide hints when meta key is hold
         if (event.metaKey && !event.ctrlKey && !event.altKey && keyCode == 91) {
           hintsContainer.style.display = 'none';
+
           return stopEvent(event);
         }
       }
